@@ -1,0 +1,137 @@
+<!doctype html>
+<html>
+<head>
+    <title>Snake Multiplayer Game</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+</head>
+<body>
+    <div id="scores">
+        <div id="own">
+            <h2> Leaderboard </h2>
+            <input type="hidden" id="nickname" value='<%= Nickname %>' />
+        </div>
+        <hr />
+        <div id="others">
+        </div>
+        <hr />
+        <div id="bestScore" value="<%= highestScore %>" hidden>
+            Highest Score: <%= highestScore %>
+        </div>
+    </div>
+
+     <script src="/socket.io/socket.io.js"></script> 
+
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        GameCanvas = (function () {
+            /*
+              Constructor
+            */
+            function GameCanvas(canvas) {
+                var ratio = window.innerWidth < window.innerHeight ?
+                    window.innerWidth : window.innerHeight;
+
+                this.canvas = canvas;
+                this.canvas.width = this.canvas.height = ratio;
+                this.context = this.canvas.getContext('2d');
+                this.gridSize = 40;
+                this.cellSize = ratio / this.gridSize;
+            }
+
+            /*
+              Render game canvas & draw players, apples & scores
+            */
+            GameCanvas.prototype.draw = function (players, apples) {
+                var context = this.context;
+                var cellSize = this.cellSize;
+
+                // Render background
+                this.context.fillStyle = "#555";
+                this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+                // Reset other
+                $('#others').text('');
+
+                // Render scores
+                players.forEach((p) => {
+
+                    // scores
+                    $('#others')
+                        .append($('<span>')
+                            .text(p.nickname + ': ' + p.points).css("color", p.color))
+                        .append($('<br>'));;
+
+                    // players
+                    context.fillStyle = p.color;
+                    context.shadowBlur = 0;
+                    context.fillRect(p.x * cellSize, p.y * cellSize, cellSize, cellSize);
+
+                    // tails
+                    p.tail.forEach((t) => {
+                        context.fillRect(t.x * cellSize, t.y * cellSize, cellSize, cellSize);
+                    });
+                });
+
+                // Render apples
+                apples.forEach((a) => {
+                    context.fillStyle = "#ff0000";
+                    context.shadowBlur = 30;
+                    context.shadowColor = "violet";
+                    context.fillRect(a.x * cellSize, a.y * cellSize, cellSize, cellSize);
+
+                });
+            }
+
+            return GameCanvas;
+        })();
+
+        /* Highest Score */
+        var score = '<%= highestScore %>';
+
+        if (score != '') {
+            $('#bestScore').removeAttr('hidden');
+            console.log(score);
+        }
+
+        /*
+          Initialize Game
+        */
+        var socket = io();
+        var playerId;
+        var nickname;
+
+        // Authenticate
+        nickname = $('#nickname').val().trim();
+
+        if (nickname !== '') {
+            socket.emit('auth', { nickname }, (session) => {
+                playerId = session.id;
+ 
+            });
+        }
+
+        // Create & insert canvas
+        var canvas = document.createElement("canvas");
+        document.body.appendChild(canvas);
+
+        // Create game with canvas
+        var game = new GameCanvas(canvas);
+
+        // Send keystrokes
+        document.onkeydown = (ev) => {
+            socket.emit('key', ev.keyCode);
+        }
+
+        // Receive state from server
+        socket.on('state', (stuff) => {
+            // and redraw the game
+            game.draw(stuff.players, stuff.apples);
+        });
+
+    </script>
+</body>
+</html>

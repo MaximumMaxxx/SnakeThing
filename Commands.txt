@@ -1,0 +1,31 @@
+LOGGING INTO HEROKU:
+-heroku login
+-heroku git:remote -a appname
+-heroku config | findstr CLEARDB_DATABASE_URL
+
+'mysql://username:password@host/database?reconnect=true'
+
+my_db = mysql.connector.connect(
+    host = "",
+    user="",
+    password="",
+    database = ""  
+)
+
+INSTALL NODE.JS Dependencies:
+https://nodejs.org/en/download/
+Extension: npm
+Extension: gitlens (optional)
+Extension: tabnine (optional)
+
+once npm is installed:
+npm install express
+npm install lodash
+npm install socket.io
+npm install ejs
+
+Extensions:
+live server
+gitlens
+bootstrap
+docker

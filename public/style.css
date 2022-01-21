@@ -1,0 +1,57 @@
+
+
+body {
+    font: 24px Helvetica, Arial;
+    text-align: center;
+    vertical-align: middle;
+    background: #f0f0f0;
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 500px;
+}
+
+#scores {
+    float: right;
+    padding-top: 16px;
+    padding-right: 16px;
+}
+
+.form-control {
+    width: 200px;
+    margin: auto;
+}
+
+.btn-outline-info {
+    color: #ffffff;
+    background-color: #2a860fe8;
+}
+
+#title {
+    color: #367a31;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+#titleSection {
+    margin-bottom: 2%;
+}
+
+    #titleSection > ul {
+        font-size: 15px;
+        text-align: left;
+        padding-left: 70px;
+    }
+
+#others {
+    text-align: right;
+}
+
+.small, small {
+    font-size: 60%;
+    font-weight: 400;
+}

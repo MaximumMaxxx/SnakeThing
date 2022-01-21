@@ -1,0 +1,80 @@
+<!doctype html>
+<html>
+<head>
+    <title>Snake Multiplayer Game</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/style.css" type="text/css" />
+</head>
+<body>
+    <div class="content-section">
+        <div id="titleSection">
+            <h1 id="title">Snake Game</h1>
+            <Ul>
+                <li> Use Arrow Keys to move. </li>
+                <li> Eat food to grow. </li>
+                <li> Don't Hit other Snakes. </li>
+            </Ul>
+        </div>
+        <form method="post" action="/game" onsubmit="return validation()">
+
+            <div class="form-group">
+                <input type="text" class="form-control" name="nickname" placeholder="Nickname" id="username" onchange = "validation()"/>
+
+                <span id="error"> </span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-outline-info">Play</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+       function validation() {
+        var username = document.getElementById("username");
+        var error = document.getElementById("error");
+        
+        //validate
+        //empty
+        //short
+        //blacklist names
+
+        if (username.value == "") {
+            username.style.border = "1px solid red";
+            username.style.color = "red";
+            error.textContent = "Please enter a valid username";
+            username.focus();
+
+            return false;
+
+        } else if (username.length < 3) {
+            username.style.border = "1px solid red";
+            username.style.color = "red";
+            error.textContent = "Too short! Make it longer";
+            username.focus();
+
+            return false;
+
+        } else if (username.value == "stuart") {
+            username.style.border = "1px solid red";
+            username.style.color = "red";
+            error.textContent = "This value is blacklisted. You have been banned.";
+            username.focus();
+
+            return false;
+
+        } else {
+            username.style.border = "1px solid green";
+            username.style.color = "green";
+            return true;
+        }
+
+    }
+    </script>
+
+    
+</body>
+
+</html>
+
